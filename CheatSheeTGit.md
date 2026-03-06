@@ -3,5 +3,5 @@
 *guarda cambio en tu computador*
 ## **push:**
 *sube los cambios a GitHub*
-##**pull:**
+## **pull:**
 *Baja cambio desde GitHub*
