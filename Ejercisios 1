@@ -27,3 +27,62 @@ do {
 
 console.log("¡Despegue!");
 
+5.5
+for (let i = 1; i <= 20; i++) {
+  if (i % 3 === 0) {
+    continue; // salta los múltiplos de 3
+  }
+  if (i === 17) {
+    break; // detiene el bucle al llegar a 17
+  }
+  console.log(i);
+}
+
+
+5.6
+let numero = 3; // puedes cambiar este valor
+
+for (let i = 1; i <= 10; i++) {
+  console.log(`${numero} x ${i} = ${numero * i}`);
+}
+
+5.7
+for (let fila = 1; fila <= 5; fila++) {
+  let linea = "";
+  for (let columna = 1; columna <= 5; columna++) {
+    linea += "* ";
+  }
+  console.log(linea);
+}
+
+5.8
+for (let fila = 1; fila <= 5; fila++) {
+  let linea = "";
+  for (let columna = 1; columna <= fila; columna++) {
+    linea += "* ";
+  }
+  console.log(linea);
+}
+
+5.9
+for (let i = 1; i <= 100; i++) {
+  if (i % 3 === 0 && i % 5 === 0) {
+    console.log("FizzBuzz");
+  } else if (i % 3 === 0) {
+    console.log("Fizz");
+  } else if (i % 5 === 0) {
+    console.log("Buzz");
+  } else {
+    console.log(i);
+  }
+}
+5.10
+let suma = 0;
+
+for (let i = 1; i <= 100; i++) {
+  suma += i;
+}
+
+console.log("La suma total es:", suma);
+
+
