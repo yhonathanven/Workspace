@@ -16,3 +16,14 @@ while (saldo > 0) {
 }
 
 console.log("Saldo agotado");
+
+5.4
+let contador = 5;
+
+do {
+  console.log(contador);
+  contador--;
+} while (contador >= 0);
+
+console.log("¡Despegue!");
+
