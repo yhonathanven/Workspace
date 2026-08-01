@@ -1,392 +1,299 @@
-import { useState } from "react";
-import "./App.css";
+import { useState } from 'react';
+import './App.css';
+
+const initialForm = {
+  nombre: '',
+  correo: '',
+  password: '',
+  edad: '',
+  fechaNacimiento: '',
+  experiencia: 5,
+  aceptaTerminos: false,
+  lenguajes: [],
+  modalidad: 'presencial',
+  pais: '',
+  comentarios: '',
+  colorFavorito: '#000000',
+  foto: null,
+};
+
+const lenguajesOpciones = ['JavaScript', 'Python', 'Java', 'C#', 'Go'];
+const paises = ['Argentina', 'Brasil', 'Chile', 'Colombia', 'México', 'Perú'];
 
 function App() {
+  const [form, setForm] = useState(initialForm);
+  const [submittedData, setSubmittedData] = useState(null);
+  const [mostrarErrores, setMostrarErrores] = useState(false);
 
-  const [nombre, setNombre] = useState("");
-  const [correo, setCorreo] = useState("");
-  const [password, setPassword] = useState("");
-  const [edad, setEdad] = useState("");
-  const [fecha, setFecha] = useState("");
-  const [experiencia, setExperiencia] = useState(5);
-  const [acepta, setAcepta] = useState(false);
-  const [lenguajes, setLenguajes] = useState([]);
-  const [modalidad, setModalidad] = useState("");
-  const [pais, setPais] = useState("");
-  const [comentarios, setComentarios] = useState("");
-  const [foto, setFoto] = useState(null);
-  const [color, setColor] = useState("#1e90ff");
-  const [resumen, setResumen] = useState(null);
+  const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.correo);
 
+  const handleChange = (event) => {
+    const { name, value, type, checked, files } = event.target;
 
-  const manejarLenguajes = (e) => {
-
-    const { value, checked } = e.target;
-
-    if (checked) {
-      setLenguajes([...lenguajes, value]);
-    } else {
-      setLenguajes(
-        lenguajes.filter((lenguaje) => lenguaje !== value)
-      );
+    if (type === 'checkbox' && name === 'aceptaTerminos') {
+      setForm((prev) => ({ ...prev, aceptaTerminos: checked }));
+      return;
     }
 
+    if (type === 'checkbox') {
+      setForm((prev) => {
+        const lenguajes = checked
+          ? [...prev.lenguajes, value]
+          : prev.lenguajes.filter((lenguaje) => lenguaje !== value);
+        return { ...prev, lenguajes };
+      });
+      return;
+    }
+
+    if (type === 'file') {
+      setForm((prev) => ({ ...prev, foto: files[0] || null }));
+      return;
+    }
+
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setMostrarErrores(true);
 
-  const emailValido =
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
+    const edadValida = Number(form.edad) > 0;
+    if (!emailValido || !form.aceptaTerminos || !edadValida) {
+      return;
+    }
 
-
-  const enviarFormulario = (e) => {
-
-    e.preventDefault();
-
-    setResumen({
-      nombre,
-      correo,
-      password,
-      edad,
-      fecha,
-      experiencia,
-      lenguajes,
-      modalidad,
-      pais,
-      comentarios,
-      color,
-      foto
-    });
-
+    setSubmittedData({ ...form });
   };
 
+  const fotoUrl = form.foto ? URL.createObjectURL(form.foto) : null;
 
   return (
-
-    <div className="contenedor">
-
-
-      <form onSubmit={enviarFormulario}>
-
-
-        <h1>🎓 Registro de estudiante</h1>
-
-
-        <label>Nombre completo</label>
-        <input
-          type="text"
-          value={nombre}
-          onChange={(e)=>setNombre(e.target.value)}
-        />
-
-
-        <label>Correo electrónico</label>
-        <input
-          type="email"
-          value={correo}
-          onChange={(e)=>setCorreo(e.target.value)}
-        />
-
-
-        <label>Contraseña</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e)=>setPassword(e.target.value)}
-        />
-
-
-        <label>Edad</label>
-        <input
-          type="number"
-          value={edad}
-          onChange={(e)=>setEdad(e.target.value)}
-        />
-
-
-        <label>Fecha de nacimiento</label>
-        <input
-          type="date"
-          value={fecha}
-          onChange={(e)=>setFecha(e.target.value)}
-        />
-
+    <div className="app-container">
+      <h1>Registro de estudiante</h1>
+      <form className="formulario" onSubmit={handleSubmit} noValidate>
+        <label>
+          Nombre
+          <input
+            type="text"
+            name="nombre"
+            value={form.nombre}
+            onChange={handleChange}
+            required
+          />
+        </label>
 
         <label>
-          ⭐ Nivel de experiencia: {experiencia}/10
+          Correo
+          <input
+            type="email"
+            name="correo"
+            value={form.correo}
+            onChange={handleChange}
+            required
+          />
+          {mostrarErrores && !emailValido && (
+            <span className="error">Ingresa un correo válido.</span>
+          )}
         </label>
 
-        <input
-          type="range"
-          min="1"
-          max="10"
-          value={experiencia}
-          onChange={(e)=>setExperiencia(e.target.value)}
-        />
+        <label>
+          Contraseña
+          <input
+            type="password"
+            name="password"
+            value={form.password}
+            onChange={handleChange}
+            required
+          />
+        </label>
 
+        <label>
+          Edad
+          <input
+            type="number"
+            name="edad"
+            value={form.edad}
+            onChange={handleChange}
+            min="1"
+            required
+          />
+          {mostrarErrores && Number(form.edad) <= 0 && (
+            <span className="error">La edad debe ser mayor a 0.</span>
+          )}
+        </label>
 
+        <label>
+          Fecha de nacimiento
+          <input
+            type="date"
+            name="fechaNacimiento"
+            value={form.fechaNacimiento}
+            onChange={handleChange}
+            required
+          />
+        </label>
 
-        <label className="check">
+        <label className="range-label">
+          Nivel de experiencia: <strong>{form.experiencia}</strong>
+          <input
+            type="range"
+            name="experiencia"
+            min="1"
+            max="10"
+            value={form.experiencia}
+            onChange={handleChange}
+          />
+        </label>
+
+        <label className="checkbox-inline">
           <input
             type="checkbox"
-            checked={acepta}
-            onChange={(e)=>setAcepta(e.target.checked)}
+            name="aceptaTerminos"
+            checked={form.aceptaTerminos}
+            onChange={handleChange}
           />
-          Acepto términos y condiciones
+          Acepto los términos y condiciones
         </label>
 
+        <fieldset>
+          <legend>Lenguajes que conoces</legend>
+          {lenguajesOpciones.map((lenguaje) => (
+            <label key={lenguaje} className="checkbox-inline">
+              <input
+                type="checkbox"
+                name="lenguajes"
+                value={lenguaje}
+                checked={form.lenguajes.includes(lenguaje)}
+                onChange={handleChange}
+              />
+              {lenguaje}
+            </label>
+          ))}
+        </fieldset>
 
+        <fieldset>
+          <legend>Modalidad</legend>
+          <label className="radio-inline">
+            <input
+              type="radio"
+              name="modalidad"
+              value="presencial"
+              checked={form.modalidad === 'presencial'}
+              onChange={handleChange}
+            />
+            Presencial
+          </label>
 
-        <p>💻 Lenguajes que conozco:</p>
+          <label className="radio-inline">
+            <input
+              type="radio"
+              name="modalidad"
+              value="virtual"
+              checked={form.modalidad === 'virtual'}
+              onChange={handleChange}
+            />
+            Virtual
+          </label>
+        </fieldset>
 
-        <label className="check">
+        <label>
+          País
+          <select name="pais" value={form.pais} onChange={handleChange} required>
+            <option value="">Selecciona un país</option>
+            {paises.map((pais) => (
+              <option key={pais} value={pais}>
+                {pais}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label>
+          Comentarios
+          <textarea
+            name="comentarios"
+            value={form.comentarios}
+            onChange={handleChange}
+          />
+        </label>
+
+        <label>
+          Foto de perfil
+          <input type="file" name="foto" accept="image/*" onChange={handleChange} />
+        </label>
+
+        {fotoUrl && (
+          <div className="preview">
+            <p>Vista previa de la foto:</p>
+            <img src={fotoUrl} alt="Vista previa" />
+          </div>
+        )}
+
+        <label>
+          Color favorito
           <input
-            type="checkbox"
-            value="JavaScript"
-            onChange={manejarLenguajes}
+            type="color"
+            name="colorFavorito"
+            value={form.colorFavorito}
+            onChange={handleChange}
           />
-          JavaScript
         </label>
 
-
-        <label className="check">
-          <input
-            type="checkbox"
-            value="Python"
-            onChange={manejarLenguajes}
-          />
-          Python
-        </label>
-
-
-        <label className="check">
-          <input
-            type="checkbox"
-            value="Java"
-            onChange={manejarLenguajes}
-          />
-          Java
-        </label>
-
-
-
-        <p>📚 Modalidad:</p>
-
-        <label className="check">
-          <input
-            type="radio"
-            value="Presencial"
-            checked={modalidad==="Presencial"}
-            onChange={(e)=>setModalidad(e.target.value)}
-          />
-          Presencial
-        </label>
-
-
-        <label className="check">
-          <input
-            type="radio"
-            value="Virtual"
-            checked={modalidad==="Virtual"}
-            onChange={(e)=>setModalidad(e.target.value)}
-          />
-          Virtual
-        </label>
-
-
-
-        <label>🌎 País</label>
-
-        <select
-          value={pais}
-          onChange={(e)=>setPais(e.target.value)}
-        >
-
-          <option value="">
-            Seleccione país
-          </option>
-
-          <option>Colombia</option>
-          <option>México</option>
-          <option>Argentina</option>
-          <option>España</option>
-
-        </select>
-
-
-
-        <label>📝 Comentarios</label>
-
-        <textarea
-          value={comentarios}
-          onChange={(e)=>setComentarios(e.target.value)}
-          placeholder="Escribe algo sobre ti..."
-        />
-
-
-
-        <label>📷 Foto de perfil</label>
-
-        <input
-          type="file"
-          onChange={(e)=>setFoto(e.target.files[0])}
-        />
-
-
-        {
-          foto &&
-
-          <img
-            src={URL.createObjectURL(foto)}
-            alt="Vista previa"
-            width="150"
-          />
-
-        }
-
-
-
-        <label>🎨 Selecciona tu color favorito</label>
-
-
-        <div className="colores">
-
-
-          <button
-            type="button"
-            className="color-btn rojo"
-            onClick={()=>setColor("#ff4757")}
-          ></button>
-
-
-          <button
-            type="button"
-            className="color-btn azul"
-            onClick={()=>setColor("#1e90ff")}
-          ></button>
-
-
-          <button
-            type="button"
-            className="color-btn verde"
-            onClick={()=>setColor("#2ed573")}
-          ></button>
-
-
-          <button
-            type="button"
-            className="color-btn morado"
-            onClick={()=>setColor("#9b59b6")}
-          ></button>
-
-
-          <button
-            type="button"
-            className="color-btn naranja"
-            onClick={()=>setColor("#ffa502")}
-          ></button>
-
-
-        </div>
-
-
-
-        <div
-          className="color-seleccionado"
-          style={{
-            backgroundColor: color
-          }}
-        >
-
-          Color elegido: {color}
-
-        </div>
-
-
-
-        <button
-          type="submit"
-          disabled={!acepta || !emailValido}
-        >
-
-          🚀 Enviar registro
-
+        <button type="submit" disabled={!form.aceptaTerminos || !emailValido || Number(form.edad) <= 0}>
+          Enviar
         </button>
-
-
-
       </form>
 
-
-
-
-      {
-        resumen &&
-
-        <div className="resumen">
-
-          <h2>📋 Resumen</h2>
-
-
+      {submittedData && (
+        <section className="resumen">
+          <h2>Resumen de registro</h2>
           <p>
-            <b>Nombre:</b> {resumen.nombre}
+            <strong>Nombre:</strong> {submittedData.nombre}
           </p>
-
-
           <p>
-            <b>Correo:</b> {resumen.correo}
+            <strong>Correo:</strong> {submittedData.correo}
           </p>
-
-
           <p>
-            <b>Edad:</b> {resumen.edad}
+            <strong>Edad:</strong> {submittedData.edad}
           </p>
-
-
           <p>
-            <b>Fecha:</b> {resumen.fecha}
+            <strong>Fecha de nacimiento:</strong> {submittedData.fechaNacimiento}
           </p>
-
-
           <p>
-            <b>Experiencia:</b> {resumen.experiencia}/10
+            <strong>Experiencia:</strong> {submittedData.experiencia}
           </p>
-
-
           <p>
-            <b>Lenguajes:</b> {resumen.lenguajes.join(", ")}
+            <strong>Modalidad:</strong> {submittedData.modalidad}
           </p>
-
-
           <p>
-            <b>Modalidad:</b> {resumen.modalidad}
+            <strong>País:</strong> {submittedData.pais}
           </p>
-
-
           <p>
-            <b>País:</b> {resumen.pais}
+            <strong>Lenguajes:</strong>{' '}
+            {submittedData.lenguajes.length > 0 ? submittedData.lenguajes.join(', ') : 'Ninguno'}
           </p>
-
-
           <p>
-            <b>Comentarios:</b> {resumen.comentarios}
+            <strong>Color favorito:</strong>{' '}
+            <span className="color-chip" style={{ backgroundColor: submittedData.colorFavorito }}>
+              {submittedData.colorFavorito}
+            </span>
           </p>
-
-
           <p>
-            <b>Color:</b> {resumen.color}
+            <strong>Comentarios:</strong> {submittedData.comentarios || 'Sin comentarios'}
           </p>
-
-
-        </div>
-
-      }
-
-
+          <p>
+            <strong>Aceptó términos:</strong> {submittedData.aceptaTerminos ? 'Sí' : 'No'}
+          </p>
+          {submittedData.foto && (
+            <div className="preview">
+              <p>Foto enviada:</p>
+              <img src={URL.createObjectURL(submittedData.foto)} alt="Foto enviada" />
+            </div>
+          )}
+        </section>
+      )}
     </div>
-
   );
-
 }
-
 
 export default App;

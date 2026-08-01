@@ -1,290 +1,51 @@
-1-
-La firma de una función en JavaScript es la forma en que se identifica una función por:
+//
+¿  Qué es la firma de una función en javascrip ?
+La firma de una función es básicamente su "manual de instrucciones" en una sola línea. Es lo que te dice cómo interactuar con ella sin tener que leer todo el código que tiene dentro.
+Se resume en dos cosas:
+El nombre: Cómo la invocas.
+Los parámetros: Qué "ingredientes" necesita entre los paréntesis ().
+Ejemplo rápido
+Si ves esto: enviarCorreo(destinatario, asunto)
+Su firma es: enviarCorreo(destinatario, asunto).
+Lo que te dice: "Para que yo funcione, llámame por mi nombre y dame dos datos".
+La diferencia en JavaScript
+En otros lenguajes, la firma es como un contrato legal estricto. En JavaScript, es más como una sugerencia:
+No pide tipos: No especifica si el dato es un número o texto (a menos que uses TypeScript).
+Es flexible: Puedes pasarle más o menos datos de los que pide y la función no "explota", simplemente asigna undefined a lo que falte.
+En pocas palabras: La firma es el quién es (nombre) y qué necesita (parámetros) una función.
 
-su nombre
-la cantidad de parámetros
-y, en algunos contextos, el tipo esperado de esos parámetros y el valor de retorno.
 
-En JavaScript, como el lenguaje es dinámico, normalmente la firma se refiere sobre todo a:
+¿  QUÉ ES UN RETORNO DE UNA FUNCIÓN EN JAVASCRIPT ?
+El retorno es el "resultado final" o la respuesta que una función te da después de ejecutarse.
+Los 3 puntos clave:
+La palabra return: Es el comando que lanza el valor hacia afuera de la función.
+Fin de la función: En cuanto la computadora lee un return, la función se detiene inmediatamente (no ejecuta nada de lo que esté abajo).
+El resultado: Si no pones la palabra return, la función te devuelve undefined por defecto.
 
-nombreFuncion(param1, param2, ...)
-Ejemplo simple
-function sumar(a, b) {
-  return a + b;
+Ejemplo visual:
+JavaScript
+function cocinarPizza(ingrediente) {
+    return "Pizza de " + ingrediente; // Aquí sale el resultado
 }
 
-La firma sería algo como:
+let pedido = cocinarPizza("queso"); // 'pedido' ahora vale "Pizza de queso"
 
-sumar(a, b)
+En resumen: Si los parámetros son lo que la función "come", el retorno es lo que la función "escupe" al terminar su trabajo.
 
-o informalmente:
 
-sumar(number, number) -> number
-¿Para qué sirve?
+¿ QUÉ ES UN ARGUMENTO EN JAVASCRIP ?
+Un argumento es el valor real que le pasas a una función cuando la llamas.
 
-La firma ayuda a entender:
+La diferencia clave:
+Parámetro: Es la variable "hueca" que pones al definir la función (el nombre en la receta).
 
-qué argumentos necesita una función
-cuántos parámetros recibe
-cómo debe usarse
+Argumento: Es el dato real que envías (el ingrediente de verdad).
 
-Es muy común en:
-
-documentación
-TypeScript
-APIs
-entrevistas técnicas
-Ejemplos
-Función sin parámetros
-function saludar() {
-  console.log("Hola");
+Ejemplo rápido:
+JavaScript
+function saludar(nombre) { // 'nombre' es el parámetro
+    console.log("Hola " + nombre);
 }
 
-Firma:
-
-saludar()
-Función con varios parámetros
-function crearUsuario(nombre, edad, activo) {
-  return { nombre, edad, activo };
-}
-
-Firma:
-
-crearUsuario(nombre, edad, activo)
-Diferencia con otros lenguajes
-
-En lenguajes como Java o C#, la firma puede incluir tipos exactos:
-
-int sumar(int a, int b)
-
-En JavaScript puro no existen tipos obligatorios, aunque con TypeScript sí:
-
-function sumar(a: number, b: number): number
-
-Firma:
-
-sumar(number, number): number
-Importante: JavaScript no soporta sobrecarga real por firma
-
-Esto NO funciona como en Java:
-
-function saludar(nombre) {}
-function saludar(nombre, edad) {}
-
-La segunda reemplaza a la primera.
-
-Por eso en JS normalmente se usan:
-
-parámetros opcionales
-valores por defecto
-arguments
-...rest
-
-Ejemplo:
-
-function saludar(nombre, edad = null) {
-  if (edad) {
-    console.log(nombre, edad);
-  } else {
-    console.log(nombre);
-  }
-}
-2
-  El retorno de una función en JavaScript es el valor que la función “devuelve” después de ejecutarse.
-
-Se usa la palabra clave:
-
-return
-Ejemplo básico
-function sumar(a, b) {
-  return a + b;
-}
-
-Cuando llamas la función:
-
-let resultado = sumar(2, 3);
-
-console.log(resultado);
-
-La salida será:
-
-5
-
-Porque:
-
-return a + b;
-
-devuelve el valor 5.
-
-¿Qué hace return?
-1. Devuelve un valor
-function obtenerNombre() {
-  return "Carlos";
-}
-2. Termina la ejecución de la función
-
-Todo lo que esté después de return no se ejecuta.
-
-function ejemplo() {
-  console.log("Hola");
-
-  return;
-
-  console.log("Nunca se ejecuta");
-}
-Función con retorno vs sin retorno
-Con retorno
-function multiplicar(a, b) {
-  return a * b;
-}
-
-Puedes guardar el resultado:
-
-let x = multiplicar(4, 5);
-Sin retorno
-function saludar() {
-  console.log("Hola");
-}
-
-Esta función no devuelve nada.
-
-Si haces:
-
-let x = saludar();
-
-console.log(x);
-
-verás:
-
-undefined
-
-Porque no hubo return.
-
-Retornar objetos, arrays o funciones
-Objeto
-function crearPersona() {
-  return {
-    nombre: "Ana",
-    edad: 25
-  };
-}
-Array
-function numeros() {
-  return [1, 2, 3];
-}
-Otra función
-function saludar() {
-  return function() {
-    console.log("Hola");
-  };
-}
-Resumen
-return devuelve un valor desde una función.
-También detiene la ejecución de la función.
-Si una función no usa return, devuelve undefined.
-El retorno puede ser cualquier tipo de dato:
-número
-texto
-objeto
-array
-función
-booleano
-etc.
-
-3
-  En JavaScript, un argumento es el valor que le pasas a una función cuando la llamas.
-
-Ejemplo básico
-function saludar(nombre) {
-  console.log("Hola " + nombre);
-}
-
-saludar("Carlos");
-
-Aquí:
-
-nombre → es un parámetro
-"Carlos" → es un argumento
-Diferencia entre parámetro y argumento
-Parámetro
-
-Es la variable que recibe la función.
-
-function sumar(a, b) {
-
-a y b son parámetros.
-
-Argumento
-
-Es el valor real que envías.
-
-sumar(5, 10);
-
-5 y 10 son argumentos.
-
-Otro ejemplo
-function multiplicar(x, y) {
-  return x * y;
-}
-
-let resultado = multiplicar(4, 3);
-x, y → parámetros
-4, 3 → argumentos
-Tipos de argumentos
-
-Puedes pasar cualquier tipo de dato.
-
-Número
-sumar(2, 5);
-Texto
-saludar("Ana");
-Booleano
-activar(true);
-Objeto
-mostrarUsuario({
-  nombre: "Luis"
-});
-Función
-setTimeout(function() {
-  console.log("Hola");
-}, 1000);
-
-La función anónima es un argumento.
-
-Argumentos faltantes
-
-Si no mandas un argumento, el parámetro vale undefined.
-
-function saludar(nombre) {
-  console.log(nombre);
-}
-
-saludar();
-
-Resultado:
-
-undefined
-Argumentos extra
-
-JavaScript permite enviar más argumentos de los necesarios.
-
-function suma(a, b) {
-  return a + b;
-}
-
-suma(1, 2, 3, 4);
-
-Los extras simplemente se ignoran (a menos que uses arguments o ...rest).
-
-Resumen
-Concepto	Qué es
-Parámetro	Variable definida en la función
-Argumento	Valor enviado a la función
-
-Ejemplo:
-
-function saludar(nombre) { // parámetro
-  console.log(nombre);
-}
-
-saludar("Pedro"); // argumento
+saludar("Juan"); // "Juan" es el ARGUMENTO
+En resumen: El parámetro es el molde y el argumento es lo que rellena ese molde.//
